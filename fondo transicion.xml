@@ -1,0 +1,30 @@
+<background>
+  <starttime>
+    <year>2019</year>
+    <month>05</month>
+    <day>05</day>
+    <hour>00</hour>
+    <minute>00</minute>
+    <second>00</second>
+  </starttime>
+<!-- This animation will start at midnight. -->
+  <static>
+    <duration>500.0</duration>
+    <file>direccion imagen 1</file>
+  </static>
+  <transition>
+    <duration>5.0</duration>
+    <from>direccion imagen 1</from>
+    <to>direccion imagen 2</to>
+  </transition>
+  <static>
+    <duration>500.0</duration>
+    <file>direccion imagen 2</file>
+  </static>
+  <transition>
+    <duration>5.0</duration>
+    <from>direccion imagen 2</from>
+    <to>direccion imagen 1</to>
+  </transition>
+</background>
+
