@@ -1,0 +1,153 @@
+#busqueda binaria en sort_list
+defmodule NearestSum do
+
+	def bin_search(l, sort_list, value, izq, der, med) do
+
+			#item = 0
+			#diff = 999999
+
+			actValue = value - l
+			medItem = Enum.at(sort_list, med)
+			IO.inspect {med, medItem, actValue}, label: "med, mi, actValue: 0"
+
+			{item_1, item_2} =
+				cond do
+				
+				# par exacto
+				medItem == actValue ->
+						IO.inspect medItem, label: "item encontrado, diff: 0"
+						{medItem, 0}
+
+				# final de búsqueda
+				(der - izq) < 1 ->
+						IO.puts "\nfinal búsqueda"
+
+						diff1 = abs(medItem - actValue)
+
+						#comparar con vecino para saber cuál es el más cercano
+						delta = 
+							cond do
+							medItem < actValue and med != (length(sort_list) - 1) ->
+									IO.puts "actValue es mayor"
+									1   # elemento siguiente
+	
+							medItem > actValue and med != 0 ->
+									IO.puts "actValue es menor"
+									-1 # elemento anterior
+
+							true ->
+									0
+							end
+
+						diff2 = abs(Enum.at(sort_list, med + delta) - actValue)
+
+						{returnItem, diff} =
+							if diff1 < diff2 do
+									IO.inspect {medItem, diff1, diff2, label: "item encontrado, diff1, diff2"
+									{medItem, diff1}
+							else
+									IO.inspect {sort_list[med+delta], diff1, diff2, label: "item encontrado, diff1, diff2"
+									{Enum.at(sort_list, med + delta), diff2}
+							end
+
+				# búsqueda en segunda mitad
+				medItem < actValue ->
+
+						# borde superior
+						{izq, med} =
+							if med == (length(sort_list) - 1) do
+									IO.puts "borde superior"
+									{der, med}
+									
+							else
+									IO.puts "segunda mitad"
+									{med + 1, div((der + izq), 2)}
+							end
+
+						bin_search(l, sort_list, value, izq, der, med)
+
+				# búsqueda en primera mitad
+				true ->
+
+						# borde inferior
+						{der, med} =
+							if med == 0 do
+									IO.puts "borde inferior"
+									{izq, med}
+
+							else
+									IO.puts "primera mitad"
+									{med - 1, div((der + izq), 2)}
+							end
+
+						bin_search(l, sort_list, value, izq, der, med)
+				end
+
+		{item, diff}
+	end
+
+    def get_nearest_sum(list_1, list_2, value) do
+
+			min_diff = 999999
+			item_1 = -1
+			item_2 = -1
+
+			# ordenar lista más pequeña
+			if length(list_1) < length(list_2) do
+					
+					list_2 = Enum.sort(list_2)
+
+					izq = 0
+					der = length(list_2) - 1
+					med = div(length(list_2), 2)
+
+					# búsqueda binaria
+					Enum.each(list_1, fn(l) ->
+							IO.inspect l, label: "\nl1 actual"
+							{act_item, diff} = bin_search(l, list_2, value, izq, der, med)
+
+							{item_1, item_2, min_diff} = 
+								if diff == 0 do
+									IO.puts "\npar exacto!"
+									{l, act_item, min_diff}
+
+								else
+									if diff < min_diff do
+										{l, act_item, diff}
+										IO.inspect {diff, item_1, item_2, label: "nuevo min diff, item_1, item_2"
+									else {item_1, item_2, min_diff}
+									end
+								end
+					end)
+
+			else
+
+					list_1 = Enum.sort(list_1)
+
+					izq = 0
+					der = length(list_1) - 1
+					med = round(length(list_1)/2)
+
+					# búsqueda binaria
+					Enum.each(list_2, fn(l) ->
+							IO.inspect l, label: "\nl2 actual"
+							{act_item, diff} = bin_search(l, list_1, value, izq, der, med)
+
+							{item_2, item_1, min_diff} = 
+								if diff == 0 do
+									IO.puts "\npar exacto!"
+									{l, act_item, min_diff}
+
+								else
+									if diff < min_diff do
+										{l, act_item, diff}
+										IO.inspect {diff, item_1, item_2, label: "nuevo min diff, item_1, item_2"
+									else {item_2, item_1, min_diff}
+									end
+								end
+					end)
+			end
+
+			{item_1, item_2}
+	end
+end
